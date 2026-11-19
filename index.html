@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Future of Tourism — Climate &amp; Tourism Geoportal</title>
+<meta name="description" content="Three maps on how climate shapes tourism today, how warming will change it, and which economies are exposed.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2214%22 fill=%22%232a78d6%22/%3E%3Cpath d=%22M4 18c6-3 10 3 16 0s8-2 8-2%22 stroke=%22%23fff%22 stroke-width=%222.5%22 fill=%22none%22/%3E%3C/svg%3E">
+<link rel="stylesheet" href="lib/maplibre-gl.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+  <aside id="panel" aria-label="Map description and controls">
+    <header class="brand">
+      <div class="kicker">Map challenge · Geoportal</div>
+      <h1 class="brand-title">The Future of Tourism</h1>
+      <p class="brand-sub">Climate comfort, warming and the economies that depend on visitors</p>
+    </header>
+
+    <nav class="chapters" role="tablist" aria-label="Maps">
+      <button class="chapter" role="tab" data-ch="1" aria-selected="true">
+        <span class="ch-num">01</span><span class="ch-label">Where does climate attract tourists today?</span>
+      </button>
+      <button class="chapter" role="tab" data-ch="2" aria-selected="false">
+        <span class="ch-num">02</span><span class="ch-label">Will our favourite destinations become too hot?</span>
+      </button>
+      <button class="chapter" role="tab" data-ch="3" aria-selected="false">
+        <span class="ch-num">03</span><span class="ch-label">Which economies depend on climate-sensitive tourism?</span>
+      </button>
+    </nav>
+
+    <div id="chapter-body" class="chapter-body" role="tabpanel" aria-live="polite"></div>
+
+    <footer class="panel-foot">
+      Data: ERA5 via AREAdata · WorldClim 2.1 CMIP6 · World Bank WDI · GADM 3.6 · Natural Earth.
+      <a href="#about" id="about-link">About &amp; method</a>
+    </footer>
+  </aside>
+
+  <main id="map-wrap">
+    <div id="map" aria-label="Interactive map"></div>
+    <div id="map-title" class="map-title"></div>
+    <div class="map-tools">
+      <button id="btn-globe" class="tool-btn" title="Switch between globe and flat map" aria-pressed="true">Globe</button>
+      <button id="btn-reset" class="tool-btn" title="Reset view">Reset view</button>
+    </div>
+    <div id="tooltip" class="tooltip" hidden></div>
+    <div id="card" class="card" hidden></div>
+    <div id="loading" class="loading">Loading data…</div>
+  </main>
+</div>
+
+<dialog id="about">
+  <div class="about-inner">
+    <button class="about-close" aria-label="Close">×</button>
+    <h2>About this geoportal</h2>
+    <p>Three linked maps for the challenge <em>The Future of Tourism</em>. All indicators are calculated from open data; the processing scripts are in the <code>scripts/</code> folder of the repository.</p>
+    <h3>Climate comfort (maps 01–02)</h3>
+    <ul>
+      <li><b>Weather today.</b> Daily mean temperature, relative humidity and precipitation for 2020–2025 from the ERA5 reanalysis, averaged over 3,610 first-level administrative regions (GADM 3.6) by the AREAdata project, plus 17 small territories without sub-national units.</li>
+      <li><b>Bias adjustment.</b> AREAdata temperature comes from the 1000 hPa level, which runs warm over high ground. Each region's series is shifted so its mean matches the WorldClim 2.1 near-surface climate for 2021–2040 (SSP2-4.5, median of the models); day-to-day variability is kept.</li>
+      <li><b>Comfortable day.</b> Precipitation ≤ 5 mm, no heat stress, and a daily mean temperature of 15–24 °C (<i>sightseeing &amp; city</i>) or 23–30 °C (<i>beach &amp; sun</i>). The bands follow the ideal ranges of the Holiday Climate Index (Scott et al., 2016), translated from daytime maximum to daily mean.</li>
+      <li><b>Heat-stress day.</b> Daily mean humidex ≥ 42 — the afternoon peak is then well inside the “great discomfort / dangerous” range.</li>
+      <li><b>Future.</b> Warming of each region between 2021–2040 and 2041–2060 or 2081–2100 from WorldClim 2.1 downscaled CMIP6 (up to 9 models) is added to the daily temperatures of 2020–2025 (delta method). Values shown are the median across models; the range across models is shown in the region card. Humidity and precipitation are held at present-day values.</li>
+    </ul>
+    <h3>Tourism economy (map 03)</h3>
+    <ul>
+      <li><b>Tourism receipts, % of exports</b> — World Bank WDI <code>ST.INT.RCPT.XP.ZS</code>, latest pre-pandemic year (2015–2019).</li>
+      <li><b>Tourism receipts, % of GDP</b> — the share above multiplied by exports of goods and services as % of GDP (<code>NE.EXP.GNFS.ZS</code>) in the same year. It measures earnings from foreign visitors only; domestic tourism is not included.</li>
+      <li><b>Population</b> — <code>SP.POP.TOTL</code>, latest year. <b>Climate change</b> — change in comfortable days (either profile) averaged over a country's regions, weighted by population.</li>
+    </ul>
+    <h3>Limitations</h3>
+    <p>Regional averages smooth out coasts and mountains inside large regions; sunshine, wind and sea temperature are not included; humidity and rainfall are not projected; six years of weather is a short baseline. Near a threshold, small warming can shift many days at once. The maps describe climate suitability, not actual tourist demand.</p>
+  </div>
+</dialog>
+
+<script src="lib/maplibre-gl.js"></script>
+<script src="lib/topojson-client.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
